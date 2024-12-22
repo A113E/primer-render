@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path'); // Para manejar rutas de archivos
+const path = require('path');  // Para manejar rutas de archivos
 const cors = require('cors');
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(cors());
 // Middleware para parsear JSON
 app.use(express.json());
 
-// Servir archivos estáticos del frontend
+// Servir archivos estáticos desde la carpeta 'dist'
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Base de datos simulada
@@ -54,11 +54,13 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end();
 });
 
+// Generar un nuevo ID para las notas
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) : 0;
   return maxId + 1;
 };
 
+// Ruta para crear nuevas notas
 app.post('/api/notes', (request, response) => {
   const body = request.body;
 
