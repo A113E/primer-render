@@ -36,18 +36,23 @@ const App = () => {
       });
   };
 
-  // Carga las notas desde el servidor al iniciar el componente.
   useEffect(() => {
     noteService
       .getAll()
       .then(initialNotes => {
-        setNotes(initialNotes);
+        if (Array.isArray(initialNotes)) {
+          setNotes(initialNotes); // Solo establece las notas si es un array
+        } else {
+          console.error('El backend devolvió un formato no válido:', initialNotes);
+          setNotes([]); // Establece un array vacío si el formato no es válido
+        }
       })
       .catch(error => {
-        setErrorMessage('Failed to load notes'); // Muestra un mensaje si hay un error al cargar las notas.
+        setErrorMessage('Failed to load notes');
+        console.error('Error al cargar las notas:', error);
         setTimeout(() => setErrorMessage(null), 5000);
       });
-  }, []); // La dependencia vacía asegura que solo se ejecute una vez cuando se monta el componente.
+  }, []);
 
   console.log('render', notes.length, 'notes'); // Muestra en consola el número de notas almacenadas. 
 
